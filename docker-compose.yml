@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: psy_match_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: psybot
+      POSTGRES_USER: psybot_user
+      POSTGRES_PASSWORD: psybot_dev_password_2026
+    ports:
+      # Bound to localhost only - never expose Postgres on a public
+      # interface. The bot itself connects via DATABASE_URL over
+      # 127.0.0.1, same as any other local client.
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

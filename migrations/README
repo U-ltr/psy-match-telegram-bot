@@ -1,0 +1,1 @@
+Alembic migrations for the psy-match-telegram-bot schema. Run: alembic upgrade head (see README.md at repo root for full setup).

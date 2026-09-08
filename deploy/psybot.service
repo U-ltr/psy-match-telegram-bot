@@ -1,0 +1,29 @@
+[Unit]
+Description=psy-match-telegram-bot (Telegram bot for psychologist matching)
+After=network-online.target docker.service
+Wants=network-online.target
+# Requires Postgres (started separately via docker compose in this directory)
+# to already be reachable - see README.md's deployment section.
+
+[Service]
+Type=simple
+User=psybot
+Group=psybot
+WorkingDirectory=/opt/psy-match-telegram-bot
+EnvironmentFile=/opt/psy-match-telegram-bot/.env
+ExecStart=/opt/psy-match-telegram-bot/.venv/bin/python -m app.bot
+Restart=on-failure
+RestartSec=5
+# Give the process a real chance to close its DB pool / aiohttp session
+# on redeploys instead of being SIGKILLed mid-request.
+TimeoutStopSec=20
+
+# Basic hardening - adjust ReadWritePaths if the app needs to write
+# anywhere else (it doesn't, as of this pass: no local file writes).
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target
